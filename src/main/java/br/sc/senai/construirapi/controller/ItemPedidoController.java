@@ -12,35 +12,36 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.sc.senai.construirapi.dto.PedidoDTO;
-import br.sc.senai.construirapi.model.entity.Pedido;
-import br.sc.senai.construirapi.service.PedidoService;
+import br.sc.senai.construirapi.dto.ItemDTO;
+import br.sc.senai.construirapi.model.entity.ItemPedido;
+import br.sc.senai.construirapi.service.ItemPedidoService;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api/pedidos")
-public class PedidoController {
+@RequestMapping("/api/itens")
+public class ItemPedidoController {
 
 	@Autowired
-	private PedidoService service;
+	private ItemPedidoService service;
 	
 	@PostMapping()
-	public ResponseEntity<?> save(@RequestBody PedidoDTO dto) {
+	public ResponseEntity<?> save(@RequestBody ItemDTO dto) {
 		try {
-			Pedido pedido = service.save(dto);
-			return new ResponseEntity<>(pedido, HttpStatus.CREATED);
+			ItemPedido item = service.save(dto);
+			return new ResponseEntity<>(item, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 	
 	@GetMapping()
-	public ResponseEntity<?> list() {
+	public ResponseEntity<?> list(@RequestParam Long id_pedido) {
 		try {
-			List<Pedido> pedidos = service.list();
-			return new ResponseEntity<>(pedidos, HttpStatus.OK);
+			List<ItemPedido> itens = service.findByIdPedido(id_pedido);
+			return new ResponseEntity<>(itens, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
@@ -49,8 +50,8 @@ public class PedidoController {
 	@GetMapping("{id}")
 	public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 		try {
-			Pedido pedido = service.findById(id);
-			return new ResponseEntity<>(pedido, HttpStatus.OK);
+			ItemPedido item = service.findById(id);
+			return new ResponseEntity<>(item, HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
@@ -60,6 +61,16 @@ public class PedidoController {
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		try {
 			service.delete(id);
+			return new ResponseEntity<>("Item excluído.", HttpStatus.OK);
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@DeleteMapping("/pedido/{id}")
+	public ResponseEntity<?> deletePedido(@PathVariable("id") Long id) {
+		try {
+			service.deleteByIdPedido(id);
 			return new ResponseEntity<>("Pedido excluído.", HttpStatus.OK);
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());

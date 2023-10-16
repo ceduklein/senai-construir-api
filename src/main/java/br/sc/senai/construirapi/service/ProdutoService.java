@@ -43,14 +43,16 @@ public class ProdutoService {
 		return repository.save(produto);
 	}
 	
-	public void decrementStock(Long id, Integer qtde) throws RulesException {
+	public void decreaseStock(Long id, Integer qtde) throws RulesException {
 		Produto produto = validarProduto(id);
 		produto.setEstoque(produto.getEstoque() - qtde);
+		repository.save(produto);
 	}
 	
-	public void incrementStock(Long id, Integer qtde) throws RulesException {
+	public void increaseStock(Long id, Integer qtde) throws RulesException {
 		Produto produto = validarProduto(id);
 		produto.setEstoque(produto.getEstoque() + qtde);
+		repository.save(produto);
 	}
 	
 	public void delete(Long id) throws RulesException {

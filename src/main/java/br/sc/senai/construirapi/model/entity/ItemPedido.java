@@ -41,7 +41,7 @@ public class ItemPedido {
 	private Produto produto;
 	
 	@Column(nullable = false)
-	private Integer quantity;
+	private Integer qtde;
 
 	@Column(nullable = false)
 	private Double totalItem;
